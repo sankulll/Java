@@ -1,0 +1,62 @@
+import json
+
+# Функция для создания заметки
+def create_note():
+    note_title = input("Введите название заметки: ")
+    note_content = input("Введите содержание заметки: ")
+    note = {"title": note_title, "content": note_content}
+    return note
+
+# Функция для сохранения заметки в файл
+def save_note(note):
+    with open("notes.json", "a") as file:
+        json.dump(note, file)
+        file.write("\n")
+
+# Функция для чтения списка всех заметок
+def read_notes():
+    with open("notes.json", "r") as file:
+        notes = file.readlines()
+    return notes
+
+# Функция для редактирования заметки по названию
+def edit_note(note_title):
+    with open("notes.json", "r") as file:
+        notes = file.readlines()
+    
+    for note in notes:
+        note_dict = json.loads(note)
+        if note_dict["title"] == note_title:
+            new_content = input("Введите новое содержание заметки: ")
+            note_dict["content"] = new_content
+            return note_dict
+
+# Функция для удаления заметки по названию
+def delete_note(note_title):
+    with open("notes.json", "r") as file:
+        notes = file.readlines()
+    
+    new_notes = []
+    for note in notes:
+        note_dict = json.loads(note)
+        if note_dict["title"] != note_title:
+            new_notes.append(note)
+    
+    with open("notes.json", "w") as file:
+        for note in new_notes:
+            file.write(note)
+
+# Пример использования всех функций
+note1 = create_note()
+save_note(note1)
+notes_list = read_notes()
+print("Список всех заметок:")
+print(notes_list)
+
+note_to_edit = "Заметка 1"  # Название заметки для редактирования
+edited_note = edit_note(note_to_edit)
+print("Отредактированная заметка:")
+print(edited_note)
+
+note_to_delete = "Заметка 2"  # Название заметки для удаления
+delete_note(note_to_delete)
